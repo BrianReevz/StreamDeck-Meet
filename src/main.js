@@ -19,6 +19,7 @@
 /* global MeetWrapper, StreamDeck */
 
 const streamDeck = new StreamDeck();
+console.log('StreamDeck-Meet: main.js loaded. Path:', window.location.pathname);
 const sdConnectButtonID = 'streamDeckHelperConnect';
 
 
@@ -26,6 +27,7 @@ const sdConnectButtonID = 'streamDeckHelperConnect';
  * Adds a Connect to StreamDeck button to the page.
  */
 function addConnectButton() {
+  console.log('StreamDeck-Meet: Attempting to add connect button. Path:', window.location.pathname);
   if (window.location.pathname !== '/' && window.location.pathname !== '/landing') {
     return;
   }
