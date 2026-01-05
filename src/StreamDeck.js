@@ -113,6 +113,7 @@ class StreamDeck { // eslint-disable-line
         this.#deviceType = new StreamDeckV1();
         break;
       case StreamDeckV2.PRODUCT_ID:
+      case 0x0080: // StreamDeck MK.2
         this.#deviceType = new StreamDeckV2();
         break;
       case StreamDeckXL.PRODUCT_ID:
