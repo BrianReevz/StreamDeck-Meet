@@ -719,8 +719,13 @@ class MeetWrapper { // eslint-disable-line
    * @return {?Element}
    */
   #getMicButton() {
-    const sel = '[jscontroller=eB6kvd]';
-    return document.querySelector(sel)?.querySelector('button[data-is-muted]');
+    // Search for any button that has 'microphone' in its label or tooltip
+    const buttons = Array.from(document.querySelectorAll('button'));
+    return buttons.find(b =>
+      (b.ariaLabel?.toLowerCase().includes('microphone') ||
+        b.dataset.tooltip?.toLowerCase().includes('microphone')) &&
+      b.hasAttribute('data-is-muted') // Ensure it uses the data-is-muted pattern
+    );
   }
 
   /**
@@ -729,8 +734,13 @@ class MeetWrapper { // eslint-disable-line
    * @return {?Element}
    */
   #getCamButton() {
-    const sel = '[jscontroller=bwqwSd]';
-    return document.querySelector(sel)?.querySelector('button[data-is-muted]');
+    // Search for any button that has 'camera' or 'video' in its label or tooltip
+    const buttons = Array.from(document.querySelectorAll('button'));
+    return buttons.find(b =>
+      (b.ariaLabel?.toLowerCase().includes('camera') ||
+        b.dataset.tooltip?.toLowerCase().includes('camera')) &&
+      b.hasAttribute('data-is-muted')
+    );
   }
 
   /**
