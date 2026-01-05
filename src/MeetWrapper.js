@@ -721,13 +721,8 @@ class MeetWrapper { // eslint-disable-line
    * @return {?Element}
    */
   #getMicButton() {
-    // Search for any button that has 'microphone' in its label or tooltip
-    const buttons = Array.from(document.querySelectorAll('button'));
-    return buttons.find(b =>
-      (b.ariaLabel?.toLowerCase().includes('microphone') ||
-        b.dataset.tooltip?.toLowerCase().includes('microphone')) &&
-      b.hasAttribute('data-is-muted') // Ensure it uses the data-is-muted pattern
-    );
+    // Robust selector using jsname found in both Green Room and Meeting
+    return document.querySelector('button[jsname="hw0c9"]');
   }
 
   /**
@@ -736,13 +731,8 @@ class MeetWrapper { // eslint-disable-line
    * @return {?Element}
    */
   #getCamButton() {
-    // Search for any button that has 'camera' or 'video' in its label or tooltip
-    const buttons = Array.from(document.querySelectorAll('button'));
-    return buttons.find(b =>
-      (b.ariaLabel?.toLowerCase().includes('camera') ||
-        b.dataset.tooltip?.toLowerCase().includes('camera')) &&
-      b.hasAttribute('data-is-muted')
-    );
+    // Robust selector using jsname found in both Green Room and Meeting
+    return document.querySelector('button[jsname="psRWwc"]');
   }
 
   /**
