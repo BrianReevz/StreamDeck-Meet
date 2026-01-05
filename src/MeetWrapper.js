@@ -38,6 +38,7 @@ class MeetWrapper { // eslint-disable-line
    */
   constructor(streamDeck) {
     this.#streamDeck = streamDeck;
+    console.log('StreamDeck-Meet: Version 0.0.2 [DEBUG ENABLED] - Wrapper initialized');
     this.#streamDeck.addEventListener('keydown', (evt) => {
       this.#handleStreamDeckPress(evt.detail.buttonId);
     });
@@ -129,6 +130,7 @@ class MeetWrapper { // eslint-disable-line
     }
     this.#currentRoom = this.#ROOM_NAMES.meeting;
     console.log('*SD-Meet*', 'Room:', this.#currentRoom);
+    console.log('StreamDeck-Meet: Entering meeting room state. Searching for buttons...');
 
     this.#resetButtons();
     this.#drawFullScreenButton();
