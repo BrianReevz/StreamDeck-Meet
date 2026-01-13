@@ -18,7 +18,7 @@
 
 'use strict';
 
-class MeetWrapper { // eslint-disable-line
+class MeetWrapper extends BaseWrapper { // eslint-disable-line
   #currentRoom;
   #hasBeenActivated = false;
 
@@ -29,7 +29,7 @@ class MeetWrapper { // eslint-disable-line
     exitHall: 'exitHall',
   };
 
-  #streamDeck;
+  _streamDeck;
 
   /**
    * Constructor
@@ -37,22 +37,15 @@ class MeetWrapper { // eslint-disable-line
    * @param {HIDDevice} streamDeck
    */
   constructor(streamDeck) {
-    this.#streamDeck = streamDeck;
-    console.log('StreamDeck-Meet: Version 0.0.2 [DEBUG ENABLED] - Wrapper initialized');
-    this.#streamDeck.addEventListener('keydown', (evt) => {
-      this.#handleStreamDeckPress(evt.detail.buttonId);
-    });
-
-    window.addEventListener('fullscreenchange', () => {
-      this.#drawFullScreenButton();
-    });
+    super(streamDeck);
+    console.log('StreamDeck-Meet: Version 0.0.2 [DEBUG ENABLED] - MeetWrapper initialized');
 
     window.addEventListener('click', () => {
       if (this.#hasBeenActivated || !navigator.userActivation.isActive) {
         return;
       }
       this.#hasBeenActivated = true;
-      this.#drawFullScreenButton();
+      this.drawFullScreenButton();
     });
 
     // Watch for room changes
@@ -91,10 +84,10 @@ class MeetWrapper { // eslint-disable-line
     this.#currentRoom = this.#ROOM_NAMES.lobby;
     console.log('*SD-Meet*', 'Room:', this.#currentRoom);
 
-    this.#resetButtons();
-    this.#drawFullScreenButton();
-    this.#drawButton(`start-next`);
-    this.#drawButton(`start-instant`);
+    this.resetButtons();
+    this.drawFullScreenButton();
+    this.drawButton(`start-next`);
+    this.drawButton(`start-instant`);
   }
 
   /**
@@ -107,10 +100,10 @@ class MeetWrapper { // eslint-disable-line
     this.#currentRoom = this.#ROOM_NAMES.greenRoom;
     console.log('*SD-Meet*', 'Room:', this.#currentRoom);
 
-    this.#resetButtons();
-    this.#drawFullScreenButton();
-    this.#drawButton(`enter-meeting`);
-    this.#drawButton(`home`);
+    this.resetButtons();
+    this.drawFullScreenButton();
+    this.drawButton(`enter-meeting`);
+    this.drawButton(`home`);
 
     // The timeout is there to make sure the elements have drawn on
     // screen. I should probably use a mutation observer to see when they
@@ -132,9 +125,9 @@ class MeetWrapper { // eslint-disable-line
     console.log('*SD-Meet*', 'Room:', this.#currentRoom);
     console.log('StreamDeck-Meet: Entering meeting room state. Searching for buttons...');
 
-    this.#resetButtons();
-    this.#drawFullScreenButton();
-    this.#drawButton(`end-call`);
+    this.resetButtons();
+    this.drawFullScreenButton();
+    this.drawButton(`end-call`);
 
     // The timeout is there to make sure the elements have drawn on
     // screen. I should probably use a mutation observer to see when they
@@ -169,10 +162,10 @@ class MeetWrapper { // eslint-disable-line
     this.#currentRoom = this.#ROOM_NAMES.exitHall;
     console.log('*SD-Meet*', 'Room:', this.#currentRoom);
 
-    this.#resetButtons();
-    this.#drawFullScreenButton();
-    this.#drawButton(`rejoin`);
-    this.#drawButton(`home`);
+    this.resetButtons();
+    this.drawFullScreenButton();
+    this.drawButton(`rejoin`);
+    this.drawButton(`home`);
   }
 
 
@@ -187,20 +180,15 @@ class MeetWrapper { // eslint-disable-line
    *
    * @param {number} buttonId Button ID of the button that was pressed.
    */
-  #handleStreamDeckPress(buttonId) {
+  handleStreamDeckPress(buttonId) {
+    super.handleStreamDeckPress(buttonId);
     console.log('*SD-Meet*', 'Button Pressed', buttonId);
-
-    // Toggle full screen, used in all rooms.
-    if (buttonId === this.#streamDeck.buttonNameToId('fullscreen-on')) {
-      this.#toggleFullScreen();
-      return;
-    }
 
     // Available while in the lobby.
     if (this.#currentRoom === this.#ROOM_NAMES.lobby) {
-      if (buttonId === this.#streamDeck.buttonNameToId('start-next')) {
+      if (buttonId === this._streamDeck.buttonNameToId('start-next')) {
         this.#tapStartNextMeeting();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('start-instant')) { // eslint-disable-line
+      } else if (buttonId === this._streamDeck.buttonNameToId('start-instant')) { // eslint-disable-line
         this.#tapStartInstantMeeting();
       }
       return;
@@ -208,14 +196,14 @@ class MeetWrapper { // eslint-disable-line
 
     // Available while in the green room.
     if (this.#currentRoom === this.#ROOM_NAMES.greenRoom) {
-      if (buttonId === this.#streamDeck.buttonNameToId('enter-meeting')) {
+      if (buttonId === this._streamDeck.buttonNameToId('enter-meeting')) {
         this.#tapEnterMeeting();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('mic')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('mic')) {
         this.#tapGreenRoomMic();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('cam')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('cam')) {
         this.#tapGreenRoomCam();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('home')) {
-        this.#resetButtons();
+      } else if (buttonId === this._streamDeck.buttonNameToId('home')) {
+        this.resetButtons();
         window.history.back();
       }
       return;
@@ -223,27 +211,27 @@ class MeetWrapper { // eslint-disable-line
 
     // Available while in the meeting room.
     if (this.#currentRoom === this.#ROOM_NAMES.meeting) {
-      if (buttonId === this.#streamDeck.buttonNameToId('reaction')) {
+      if (buttonId === this._streamDeck.buttonNameToId('reaction')) {
         this.#tapReactions();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('info')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('info')) {
         this.#tapInfo();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('users')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('users')) {
         this.#tapUsers();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('chat')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('chat')) {
         this.#tapChat();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('activities')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('activities')) {
         this.#tapActivities();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('present-stop')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('present-stop')) {
         this.#tapStopPresenting();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('mic')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('mic')) {
         this.#tapMic();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('cam')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('cam')) {
         this.#tapCam();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('hand')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('hand')) {
         this.#tapHand();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('cc')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('cc')) {
         this.#tapCC();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('end-call')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('end-call')) {
         this.#tapHangUp();
       }
       return;
@@ -251,58 +239,16 @@ class MeetWrapper { // eslint-disable-line
 
     // Available while in the exit hall.
     if (this.#currentRoom === this.#ROOM_NAMES.exitHall) {
-      if (buttonId === this.#streamDeck.buttonNameToId('rejoin')) {
+      if (buttonId === this._streamDeck.buttonNameToId('rejoin')) {
         this.#tapRejoin();
-      } else if (buttonId === this.#streamDeck.buttonNameToId('home')) {
+      } else if (buttonId === this._streamDeck.buttonNameToId('home')) {
         this.#tapHome();
       }
       return;
     }
   }
 
-  /**
-   * Draw an icon on the StreamDeck. Uses the current configuration to
-   * determine which button to use based on the icon name.
-   *
-   * @param {string} iconName Name of icon to draw
-   */
-  #drawButton(iconName) {
-    if (!this.#streamDeck?.isConnected) {
-      return;
-    }
-    const buttonId = this.#streamDeck.buttonNameToId(iconName);
-    if (buttonId === undefined || buttonId < 0) {
-      console.warn('*SD-Meet*', `drawButton failed, unknown icon name: '${iconName}'`);
-      return; // Not defined in the current configuration.
-    }
-    const iconURL = chrome.runtime.getURL(`ico-svg/${iconName}.svg`);
-    this.#streamDeck.fillURL(buttonId, iconURL, true);
-  }
 
-  /**
-   * Clear the StreamDeck
-   */
-  #resetButtons() {
-    if (!this.#streamDeck?.isConnected) {
-      return;
-    }
-    this.#streamDeck.clearAllButtons();
-  }
-
-  /**
-   * Draw buttons for full screen toggle.
-   */
-  #drawFullScreenButton() {
-    if (document.fullscreenElement) {
-      this.#drawButton(`fullscreen-on`);
-      return;
-    }
-    if (!navigator.userActivation.isActive) {
-      this.#drawButton(`fullscreen-disabled`);
-      return;
-    }
-    this.#drawButton(`fullscreen-off`);
-  }
 
 
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -509,7 +455,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.dataset?.isMuted == 'true';
     const img = newVal ? 'mic-disabled' : 'mic';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -522,7 +468,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.dataset?.isMuted == 'true';
     const img = newVal ? 'cam-disabled' : 'cam';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -535,7 +481,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'cc-on' : 'cc';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -548,7 +494,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'hand-raised' : 'hand';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -561,7 +507,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'info-open' : 'info';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -574,7 +520,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'users-open' : 'users';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -587,7 +533,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'chat-open' : 'chat';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -600,7 +546,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'activities-open' : 'activities';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -609,7 +555,7 @@ class MeetWrapper { // eslint-disable-line
   #updatePresentingButton() {
     const button = this.#getStopPresentingButton();
     const img = button ? 'present-stop' : 'blank';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -622,7 +568,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.getAttribute('aria-pressed') == 'true';
     const img = newVal ? 'reaction-open' : 'reaction';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -635,7 +581,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.dataset?.isMuted == 'true';
     const img = newVal ? 'mic-disabled' : 'mic';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
   /**
@@ -648,7 +594,7 @@ class MeetWrapper { // eslint-disable-line
     }
     const newVal = button.dataset?.isMuted == 'true';
     const img = newVal ? 'cam-disabled' : 'cam';
-    this.#drawButton(img);
+    this.drawButton(img);
   }
 
 
@@ -907,21 +853,7 @@ class MeetWrapper { // eslint-disable-line
     console.warn('*SD-Meet*', `Unable to find/click button '${buttName}'`);
   }
 
-  /**
-   * Toggles the tab between full screen and regular.
-   */
-  async #toggleFullScreen() {
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        await document.body.requestFullscreen();
-      }
-    } catch (ex) {
-      // Cannot do fullscreen, disable the button.
-      this.#drawButton(`fullscreen-disabled`);
-    }
-  }
+
 
   /**
    * Starts an instant meeting (lobby).

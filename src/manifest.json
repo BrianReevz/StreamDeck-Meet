@@ -6,7 +6,10 @@
   "manifest_version": 3,
   "content_scripts": [
     {
-      "matches": ["https://meet.google.com/*"],
+      "matches": [
+        "https://meet.google.com/*",
+        "https://teams.microsoft.com/*"
+      ],
       "js": [
         "CanvasToBMP.js",
         "StreamDeck.js",
@@ -14,13 +17,18 @@
         "StreamDeckV1.js",
         "StreamDeckV2.js",
         "StreamDeckXL.js",
+        "BaseWrapper.js",
         "MeetWrapper.js",
+        "TeamsWrapper.js",
         "main.js"
       ]
     }
   ],
   "web_accessible_resources": [{
     "resources": ["ico-svg/*"],
-    "matches": ["https://meet.google.com/*"]
+    "matches": [
+      "https://meet.google.com/*",
+      "https://teams.microsoft.com/*"
+    ]
   }]
 }

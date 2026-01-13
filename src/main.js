@@ -16,7 +16,7 @@
 
 'use strict';
 
-/* global MeetWrapper, StreamDeck */
+/* global MeetWrapper, TeamsWrapper, StreamDeck */
 
 const streamDeck = new StreamDeck();
 console.log('StreamDeck-Meet: main.js loaded. Path:', window.location.pathname);
@@ -56,7 +56,12 @@ function startWrapper() {
     if (elem) {
       elem.remove();
     }
-    new MeetWrapper(streamDeck);
+
+    if (window.location.hostname.endsWith('teams.microsoft.com')) {
+      new TeamsWrapper(streamDeck);
+    } else {
+      new MeetWrapper(streamDeck);
+    }
     return true;
   }
   addConnectButton();
