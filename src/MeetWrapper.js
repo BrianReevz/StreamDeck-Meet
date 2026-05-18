@@ -59,7 +59,6 @@ class MeetWrapper { // eslint-disable-line
     const pathname = window.location.pathname;
     if (pathname === '/' || pathname === '/landing') {
       this.#enterLobby();
-      return;
     }
 
     const bodyObserver = new MutationObserver(() => {
