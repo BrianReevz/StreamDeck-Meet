@@ -63,10 +63,10 @@ class MeetWrapper { // eslint-disable-line
     }
 
     const bodyObserver = new MutationObserver(() => {
-      if (document.querySelector('div[data-meeting-title]')) {
-        this.#enterMeeting();
-      } else if (document.querySelector('[jscontroller=dyDNGc]')) {
+      if (document.querySelector('[jscontroller=dyDNGc]')) {
         this.#enterGreenRoom();
+      } else if (document.querySelector('button[jsname="hw0c9"]') || document.querySelector('button[jsname="psRWwc"]')) {
+        this.#enterMeeting();
       } else if (document.querySelector('[jsname=r4nke]')) {
         this.#enterExitHall();
       }
