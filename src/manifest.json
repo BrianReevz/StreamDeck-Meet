@@ -6,7 +6,7 @@
   "manifest_version": 3,
   "content_scripts": [
     {
-      "matches": ["https://meet.google.com/*"],
+      "matches": ["https://meet.google.com/*", "https://preprod.meet.google.com/*", "https://chat.google.com/*", "https://play.google.com/*"],
       "js": [
         "CanvasToBMP.js",
         "StreamDeck.js",
@@ -21,6 +21,6 @@
   ],
   "web_accessible_resources": [{
     "resources": ["ico-svg/*"],
-    "matches": ["https://meet.google.com/*"]
+    "matches": ["https://meet.google.com/*", "https://preprod.meet.google.com/*", "https://chat.google.com/*", "https://play.google.com/*"]
   }]
 }

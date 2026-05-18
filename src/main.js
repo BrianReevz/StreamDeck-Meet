@@ -28,9 +28,6 @@ const sdConnectButtonID = 'streamDeckHelperConnect';
  */
 function addConnectButton() {
   console.log('StreamDeck-Meet: Attempting to add connect button. Path:', window.location.pathname);
-  if (window.location.pathname !== '/' && window.location.pathname !== '/landing') {
-    return;
-  }
   const elem = document.createElement('button');
   elem.id = sdConnectButtonID;
   elem.type = 'button';
