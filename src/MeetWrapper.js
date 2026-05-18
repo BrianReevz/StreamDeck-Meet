@@ -48,10 +48,6 @@ class MeetWrapper { // eslint-disable-line
     });
 
     window.addEventListener('click', () => {
-      if (this.#hasBeenActivated || !navigator.userActivation.isActive) {
-        return;
-      }
-      this.#hasBeenActivated = true;
       this.#drawFullScreenButton();
     });
 
