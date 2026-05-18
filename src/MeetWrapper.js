@@ -82,7 +82,7 @@ class MeetWrapper { // eslint-disable-line
         this.#enterExitHall();
       }
     });
-    bodyObserver.observe(document.body, {attributes: true, childList: true});
+    bodyObserver.observe(document.body, {attributes: true, childList: true, subtree: true});
   }
 
 
