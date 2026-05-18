@@ -66,6 +66,7 @@ class MeetWrapper { // eslint-disable-line
     });
     bodyObserver.observe(document.body, {attributes: true, childList: true, subtree: true});
     this.#detectRoom();
+    setInterval(() => this.#detectRoom(), 1000);
   }
 
   /**
