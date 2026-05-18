@@ -317,6 +317,7 @@ class MeetWrapper { // eslint-disable-line
   #setupMicButton() {
     const micButton = this.#getMicButton();
     if (!micButton) {
+      console.warn('*SD-Meet*', 'Unable to find Mic button during setup');
       return;
     }
     const micObserver = new MutationObserver(() => {
@@ -332,6 +333,7 @@ class MeetWrapper { // eslint-disable-line
   #setupCamButton() {
     const camButton = this.#getCamButton();
     if (!camButton) {
+      console.warn('*SD-Meet*', 'Unable to find Cam button during setup');
       return;
     }
     const camObserver = new MutationObserver(() => {
@@ -347,6 +349,7 @@ class MeetWrapper { // eslint-disable-line
   #setupCCButton() {
     const ccButton = this.#getCCButton();
     if (!ccButton) {
+      console.warn('*SD-Meet*', 'Unable to find CC button during setup');
       return;
     }
     const ccObserver = new MutationObserver(() => {
@@ -362,6 +365,7 @@ class MeetWrapper { // eslint-disable-line
   #setupHandButton() {
     const handButton = this.#getHandButton();
     if (!handButton) {
+      console.warn('*SD-Meet*', 'Unable to find Hand button during setup');
       return;
     }
     const handObserver = new MutationObserver(() => {
@@ -377,6 +381,7 @@ class MeetWrapper { // eslint-disable-line
   #setupInfoButton() {
     const infoButton = this.#getInfoButton();
     if (!infoButton) {
+      console.warn('*SD-Meet*', 'Unable to find Info button during setup');
       return;
     }
     const infoObserver = new MutationObserver(() => {
@@ -392,6 +397,7 @@ class MeetWrapper { // eslint-disable-line
   #setupPeopleButton() {
     const button = this.#getPeopleButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find People button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -407,6 +413,7 @@ class MeetWrapper { // eslint-disable-line
   #setupChatButton() {
     const button = this.#getChatButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find Chat button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -422,6 +429,7 @@ class MeetWrapper { // eslint-disable-line
   #setupActivitiesButton() {
     const button = this.#getActivitiesButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find Activities button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -437,6 +445,7 @@ class MeetWrapper { // eslint-disable-line
   #setupPresentingButton() {
     const presentationBar = this.#getPresentationBar();
     if (!presentationBar) {
+      console.warn('*SD-Meet*', 'Unable to find Presentation Bar during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -452,6 +461,7 @@ class MeetWrapper { // eslint-disable-line
   #setupReactionButton() {
     const button = this.#getReactionButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find Reaction button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -467,6 +477,7 @@ class MeetWrapper { // eslint-disable-line
   #setupGreenRoomMicButton() {
     const button = this.#getGreenRoomMicButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find Green Room Mic button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -482,6 +493,7 @@ class MeetWrapper { // eslint-disable-line
   #setupGreenRoomCamButton() {
     const button = this.#getGreenRoomCamButton();
     if (!button) {
+      console.warn('*SD-Meet*', 'Unable to find Green Room Cam button during setup');
       return;
     }
     const observer = new MutationObserver(() => {
@@ -722,7 +734,16 @@ class MeetWrapper { // eslint-disable-line
    */
   #getMicButton() {
     // Robust selector using jsname found in both Green Room and Meeting
-    return document.querySelector('button[jsname="hw0c9"]');
+    const btn = document.querySelector('button[jsname="hw0c9"]');
+    if (btn) {
+      return btn;
+    }
+    // Fallback to semantic search
+    const buttons = Array.from(document.querySelectorAll('button'));
+    return buttons.find(b => {
+      const label = (b.ariaLabel || b.title || '').toLowerCase();
+      return label.includes('microphone') && b.hasAttribute('data-is-muted');
+    });
   }
 
   /**
@@ -732,7 +753,16 @@ class MeetWrapper { // eslint-disable-line
    */
   #getCamButton() {
     // Robust selector using jsname found in both Green Room and Meeting
-    return document.querySelector('button[jsname="psRWwc"]');
+    const btn = document.querySelector('button[jsname="psRWwc"]');
+    if (btn) {
+      return btn;
+    }
+    // Fallback to semantic search
+    const buttons = Array.from(document.querySelectorAll('button'));
+    return buttons.find(b => {
+      const label = (b.ariaLabel || b.title || '').toLowerCase();
+      return label.includes('camera') && b.hasAttribute('data-is-muted');
+    });
   }
 
   /**
