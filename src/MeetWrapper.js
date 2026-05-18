@@ -62,27 +62,35 @@ class MeetWrapper { // eslint-disable-line
     }
 
     const bodyObserver = new MutationObserver(() => {
-      const greenRoom = document.querySelector('[jscontroller=dyDNGc]');
-      const mic = document.querySelector('button[jsname="hw0c9"]');
-      const cam = document.querySelector('button[jsname="psRWwc"]');
-      const exitHall = document.querySelector('[jsname=r4nke]');
-      
-      console.log('*SD-Meet* Room detection check:', {
-        greenRoom: !!greenRoom,
-        mic: !!mic,
-        cam: !!cam,
-        exitHall: !!exitHall
-      });
-
-      if (greenRoom) {
-        this.#enterGreenRoom();
-      } else if (mic || cam) {
-        this.#enterMeeting();
-      } else if (exitHall) {
-        this.#enterExitHall();
-      }
+      this.#detectRoom();
     });
     bodyObserver.observe(document.body, {attributes: true, childList: true, subtree: true});
+    this.#detectRoom();
+  }
+
+  /**
+   * Detects the current room based on DOM elements.
+   */
+  #detectRoom() {
+    const greenRoom = document.querySelector('[jscontroller=dyDNGc]');
+    const mic = document.querySelector('button[jsname="hw0c9"]');
+    const cam = document.querySelector('button[jsname="psRWwc"]');
+    const exitHall = document.querySelector('[jsname=r4nke]');
+    
+    console.log('*SD-Meet* Room detection check:', {
+      greenRoom: !!greenRoom,
+      mic: !!mic,
+      cam: !!cam,
+      exitHall: !!exitHall
+    });
+
+    if (greenRoom) {
+      this.#enterGreenRoom();
+    } else if (mic || cam) {
+      this.#enterMeeting();
+    } else if (exitHall) {
+      this.#enterExitHall();
+    }
   }
 
 
